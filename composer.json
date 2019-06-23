@@ -1,0 +1,26 @@
+{
+    "require": {
+        "pimple/pimple": "^3.2",
+        "symfony/event-dispatcher": "^4.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Poet\\": "framework/"
+        },
+        "files": [
+            "framework/helpers.php"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.laravel-china.org"
+        }
+    }
+}
