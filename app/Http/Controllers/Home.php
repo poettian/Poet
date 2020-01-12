@@ -3,14 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Events\HelloSayEvent;
-use Redis;
 use Exception;
 
 class Home
 {
     public function index()
     {
-        echo 'lab.dev.com';
+	    phpinfo();exit;
+        $datetime = date('Y-m-d H:i:s');
+        return "北京时间 {$datetime}";
+    }
+
+    public function load()
+    {
+        $data = [
+            'action' => 'addCourseClass',
+            'data' => [
+                'course_id' => 1000000,
+                'class_id' => 10000000,
+            ]
+        ];
+
+        
     }
 
     public function say()
@@ -21,27 +35,8 @@ class Home
 
     public function redis()
     {
-        try {
-            $redis = new Redis();
-            if (! $redis->connect('127.0.0.1', 6379, 5, null, 200)) {
-                throw new Exception('can not connect to redis');
-            }
-            if (! $redis->auth('secret')) {
-                throw new Exception('authenticate failed');
-            }
-            if (! $redis->select(0)) {
-                throw new Exception('select db failed');
-            }
-            $redis->setOption(Redis::OPT_PREFIX, 'lab.dev.com:');	// use custom prefix on all keys
+        $value = app('redis')->get('test');
 
-            $value = $redis->get('start');
-            var_dump($value);
-
-            $redis->close();
-        } catch (\RedisException $e) {
-            die($e->getMessage());
-        } catch (\Exception $e) {
-            die($e->getMessage());
-        }
+        print_r($value);
     }
 }

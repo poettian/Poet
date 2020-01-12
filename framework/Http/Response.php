@@ -16,6 +16,8 @@ class Response
     {
         if (is_string($output)) {
             $this->body = $output;
+        } elseif (is_array($output)) {
+            $this->body = json_encode($output);
         }
         
         return $this;

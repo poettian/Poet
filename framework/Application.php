@@ -4,7 +4,6 @@ namespace Poet;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use Poet\ServiceProvider;
 use Poet\Events\EventServiceProvider;
 use Poet\Config\ConfigServiceProvider;
 use Poet\Http\HttpServiceProvider;
@@ -25,9 +24,10 @@ class Application extends Container
     {
         parent::__construct();
 
-        $this->setBasePath($basePath);
         static::setInstance($this);
-        
+
+        $this->setBasePath($basePath);
+
         $this->registerBaseServiceProviders();
     }
 
