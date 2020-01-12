@@ -4,7 +4,7 @@ Poet is a PHP micro framework.
 
 It's not complete.Use it carefully.
 
-# Why it?
+## Why it?
 
 Now we can find a lot of powerfull php framework.They are strong and elegant,but also complex.
 
