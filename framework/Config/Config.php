@@ -27,11 +27,10 @@ class Config
 
     public function get($key)
     {
-        $value = &$this->items;
+        $value = $this->items;
         foreach (explode('.', $key) as $index) {
-            $value = &$value[$index];
+            $value = $value[$index];
         }   
         return $value;
     }
-
 }

@@ -12,7 +12,11 @@ class HttpServiceProvider extends ServiceProvider
         $container['http'] = function ($c) {
             return new Http($c);
         };
-
+    
+        $container['router'] = function ($c) {
+            return new Router($c);
+        };
+        
         $container['request'] = function ($c) {
             return new Request($c);
         };

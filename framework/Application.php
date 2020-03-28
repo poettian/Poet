@@ -55,6 +55,11 @@ class Application extends Container
         return $this->basePath . DIRECTORY_SEPARATOR . 'config';
     }
 
+    public function logPath()
+    {
+        return $this->basePath . DIRECTORY_SEPARATOR . 'logs';
+    }
+
     protected function registerBaseServiceProviders()
     {
         $this->register(new ConfigServiceProvider);
@@ -121,5 +126,10 @@ class Application extends Container
         if (method_exists($provider, 'boot')) {
             call_user_func([$provider, 'boot']);
         }
+    }
+
+    public function runningInConsole()
+    {
+        return php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg';
     }
 }
