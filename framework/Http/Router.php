@@ -11,6 +11,7 @@ class Router
         $this->app = $app;
     }
     
+    // @todo 这里需要重写一下，仿照 laravel 的形式
     public function init()
     {
         if ($this->app->runningInConsole()) {
