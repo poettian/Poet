@@ -19,22 +19,29 @@ class Http
 
     public function handle()
     {
-        do {
-            list($controller, $action, $parameters) = $this->router->init();
-            $controller_class = "\\App\\Http\\Controllers\\{$controller}";
-            if (!class_exists($controller_class)) {
-                $this->response->setStatusCode('404')->parse('request path not exists');
-                break;
-            }
-            $controller_obj = new $controller_class();
-            if (!method_exists($controller_obj, $action)) {
-                $this->response->setStatusCode('404')->parse('request path not exists');
-                break;
-            }
-            $output = call_user_func([$controller_obj, $action], ...$parameters);
+        try {
+            $this->includeFile();
+            $callback = $this->router->dispatch();
+            $output = call_user_func($callback);
             $this->response->parse($output);
-        } while (false);
-        
+        } catch (\Exception $e) {
+            // @todo 这里要做处理
+            echo '发生错误啦';
+        }
+    
         return $this->response;
+    }
+    
+    /**
+     * 包含路由文件
+     */
+    protected function includeFile()
+    {
+        $routePath = $this->app->routePath();
+        if ($this->app->runningInConsole()) {
+            require $routePath . '/cli.php';
+        } else {
+            require $routePath . '/web.php';
+        }
     }
 }

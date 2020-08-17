@@ -59,6 +59,19 @@ class Application extends Container
     {
         return $this->basePath . DIRECTORY_SEPARATOR . 'logs';
     }
+    
+    /**
+     * 路由目录或文件路径
+     *
+     * @param string $file
+     *
+     * @return string
+     */
+    public function routePath($file = '')
+    {
+        $routePath = $this->basePath . DIRECTORY_SEPARATOR . 'routes';
+        return $file ? $routePath . '/' . $file : $routePath;
+    }
 
     protected function registerBaseServiceProviders()
     {

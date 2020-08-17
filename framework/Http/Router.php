@@ -2,38 +2,60 @@
 
 namespace Poet\Http;
 
+use Poet\Exception\RouteNotFoundException;
+
 class Router
 {
     protected $app;
+    
+    protected $routes = [];
     
     public function __construct($app)
     {
         $this->app = $app;
     }
     
-    // @todo 这里需要重写一下，仿照 laravel 的形式
-    public function init()
+    public function dispatch()
     {
-        if ($this->app->runningInConsole()) {
-            $uri = parse_url($_SERVER['argv'][1] ?? '/');
-        } else {
-            $uri = parse_url($_SERVER['REQUEST_URI']);
-        }
+        return $this->app->runningInConsole() ? $this->cliDispatch() : $this->webDispatch();
+    }
+    
+    protected function cliDispatch()
+    {
+    
+    }
+    
+    protected function webDispatch()
+    {
+        $uri = parse_url($_SERVER['REQUEST_URI']);
+        $method = strtolower($_SERVER['REQUEST_METHOD']);
         $path = $uri['path'];
-        if ($path == '/') {
-            return ['Home', 'index', []];
+        if (!isset($this->routes[$method][$path])) {
+            throw new RouteNotFoundException();
         }
-        $controller = strtok($path, '/');
-        $action = strtok('/');
-        if ($action === false) {
-            $action = 'index';
-            return [$controller, $action, []];
-        }
-        $parameters = [];
-        while ($v = strtok('/') !== false) {
-            $parameters[] = $v;
+        $handler = $this->routes[$method][$path];
+        if ($handler instanceof \Closure) {
+            $callback = $handler;
+        } else {
+            // @todo 这里要做空字符串的处理
+            list($controllerName, $actionName) = explode('@', $handler);
+            $controllerName = "\\App\\Http\\Controllers\\{$controllerName}";
+            if (!class_exists($controllerName)) {
+                throw new \Exception('controller not found');
+            }
+            $controller = new $controllerName();
+            if (!method_exists($controller, $actionName)) {
+                throw new \Exception('action not found');
+            }
+            $callback = [$controller, $actionName];
         }
         
-        return [ucfirst($controller), strtolower($action), $parameters];
+        return $callback;
+    }
+    
+    public function get(string $route, $handler)
+    {
+        $route = '/' . trim($route, '/');
+        $this->routes['get'][$route] = $handler;
     }
 }
