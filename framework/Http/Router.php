@@ -58,4 +58,10 @@ class Router
         $route = '/' . trim($route, '/');
         $this->routes['get'][$route] = $handler;
     }
+    
+    public function post(string $route, $handler)
+    {
+        $route = '/' . trim($route, '/');
+        $this->routes['post'][$route] = $handler;
+    }
 }

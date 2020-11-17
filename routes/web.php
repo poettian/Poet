@@ -10,7 +10,7 @@ $router->get('/', function () {
 });
 
 // 控制器
-$router->get('/tt', 'Home@index');
+$router->post('test', 'Home@test');
 
 // 路由组
 //$router->group([], function () {
